@@ -1,0 +1,38 @@
+h2{
+    font-size: 3rem; /*mesure relative pour augmenter la taille de la police*/
+    text-align: center; /*le mot se positionne au milieu*/
+}
+
+h1{
+    font-size: 5rem; /*mesure relative pour augmenter la taille de la police*/
+    text-align: center; /*le mot se positionne au milieu*/
+}
+
+body{
+    background-color: palevioletred;
+    font-size: 14pt;
+    width: 100vw;
+}
+
+#page {
+    width: 80%;
+    margin: 0 auto;
+    background-color: white;
+    border: 2px solid;
+    
+}
+
+.aboutme {
+    margin: 10%;
+}
+
+.entete {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+    background-color:beige;
+    border-top: 2px solid;
+}
+
