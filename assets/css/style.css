@@ -8,7 +8,7 @@ h1{
     text-align: center; /*le mot se positionne au milieu*/
 }
 
-body{
+html{
     background-color: palevioletred;
     font-size: 14pt;
     width: 100vw;
@@ -21,9 +21,13 @@ body{
     border: 2px solid;
     
 }
+/*
+ID (#): Identifie de manière unique un élément sur la page. Chaque page doit avoir un seul élément avec un ID spécifique.
+Class (.): Regroupe plusieurs éléments ensemble. Vous pouvez appliquer la même classe à plusieurs éléments sur la page.
+pour cette raison on utilise class pour .aboutme*/
 
-.aboutme {
-    margin: 10%;
+.aboutme { 
+    margin: 10%; /*changement les marges*/
 }
 
 .entete {
