@@ -1,4 +1,4 @@
-let poem = `à la musique
+let poem = `A la musique
 
 Sur la place taillée en mesquines pelouses,
 Square où tout est correct, les arbres et les fleurs,
@@ -44,6 +44,8 @@ J'ai bientôt déniché la bottine, le bas...
 - Je reconstruis les corps, brûlé de belles fièvres.
 Elles me trouvent drôle et se parlent tout bas...
 - Et je sens les baisers qui me viennent aux lèvres."`; 
+
+
 
 
 // Faire une Tableau des mots du poem
@@ -160,3 +162,14 @@ console.log (dict2);
 */
 console.log (lines.length - 1);
 console.log (dict3);
+
+
+
+console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+console.log(listOfStrings)
+console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+console.log(paragraphs)
+console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+console.log(lines)
+console.log(":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::")
+
