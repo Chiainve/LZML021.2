@@ -5,6 +5,10 @@ function syllabify(words) {
 }
 
 function analyzeWords(words){
+    //chaine principal
+    let finalStr = "";
+
+
     // J'ai cree un dictionaire vide 
     let dict = {};
 
@@ -30,7 +34,7 @@ function analyzeWords(words){
     // Obtenir les clés correspondant aux 5 premières entrées (clés avec les 5 plus grandes valeurs)
     const keysWith10BiggestValues = entries.slice(0, 10).map(entry => entry[0]);
 
-    console.log(`les 10 mots les plus frequents sont: ${keysWith10BiggestValues.join(", ")}`);
+    finalStr += `les 10 mots les plus frequents sont: ${keysWith10BiggestValues.join(", ")}\n`;
 
     // Obtenir les clés avec la valeur un
     const keysWithValueOne = Object.keys(dict).filter(key => dict[key] === 1);
@@ -38,11 +42,16 @@ function analyzeWords(words){
     //calculate la richesse lexicale
     let richLex = keysWithValueOne.length / words.length * 100;
 
-    console.log(`la richesse lexicale est: ${richLex}%`);
+    finalStr += `la richesse lexicale est: ${richLex}%\n`;
+
+    return finalStr
 }
 
 
 function averageWordsLine(lines){
+
+    //chaine principal
+    let finalStr = "";
     
     //j'ai commencé avec 1 parce que le titre n'est pas une ligne
     for (let i=1; i < lines.length; i++){
@@ -59,13 +68,18 @@ function averageWordsLine(lines){
         }
         let average = sum / words.length;
 
-        console.log(`la longueur moyenne des mots dans la phrase ${i} est: ${average}`);
+        finalStr += `la longueur moyenne des mots dans la phrase ${i} est: ${average}\n`;
         
     }
+    
+    return finalStr
 
 }
 
 function typologyParagraph(paragraphs){
+
+    //chaine principal
+    let finalStr = "";
 
     // Creer un dictionaire vide pour le paragraphs 
     let dict2 = {};
@@ -87,16 +101,21 @@ function typologyParagraph(paragraphs){
         }
     }
 
-    console.log(`ce poeme contien ${paragraphs.length - 1} strophes:`)
+    finalStr += `ce poeme contien ${paragraphs.length - 1} strophes:\n`
 
     for(let key in dict2){
-        console.log(`${dict2[key].length} strophes de ${key} vers`)
+        finalStr += `${dict2[key].length} strophes de ${key} vers\n`
     }
+
+    return finalStr
 
 }
 
 
 function typologyLines(lines){
+
+    //chaine principal
+    let finalStr = "";
 
     // Creer un dictionaire vide pour le paragraphs 
     let dict3 = {};
@@ -122,18 +141,24 @@ function typologyLines(lines){
         }
     }
 
-    console.log(`ce poeme contien ${lines.length - 1} vers:`)
+    finalStr += `ce poeme contien ${lines.length - 1} vers:\n`
 
     for(let key in dict3){
-        console.log(`${dict3[key].length} vers de ${key} syllables`)
+       finalStr += `${dict3[key].length} vers de ${key} syllables\n`
     }
+
+    return finalStr
 
 }
 
 
-function main(poem){
+function main(){
+    //chaine principal
+    let finalStr = "";
 
-    
+    //Obtenir le poem en Html
+    var poem = document.getElementById("poeme").value;
+
     // Faire une Tableau des mots du poems (sans [?,:;.-])
     const words = (poem.replace(/[?,:;.-]/g, '')).split(/\s+/);
     // Diviser la chaîne par lignes et filtrer les lignes vides (sans [?,:;.-])
@@ -142,18 +167,21 @@ function main(poem){
     const paragraphs = (poem.replace(/[?,:;.-]/g, '')).split("\n\n");
 
     // exercices 1 et 2
-    analyzeWords(words);
+    finalStr += analyzeWords(words);
     // exercices 3
-    console.log(`le nombre de phrase est: ${lines.length - 1}`);
+    finalStr += `le nombre de phrase est: ${lines.length - 1}\n`;
     // exercices 4
-    averageWordsLine(lines)
-    console.log("///////////////////////////////////////////////////////////")
+    finalStr += averageWordsLine(lines)
+    finalStr += "///////////////////////////////////////////////////////////\n"
     // exercices 5
-    typologyParagraph(paragraphs)
-    console.log("///////////////////////////////////////////////////////////")
+    finalStr += typologyParagraph(paragraphs)
+    finalStr += "///////////////////////////////////////////////////////////\n"
     // exercices 6
-    typologyLines(lines)
-    console.log("///////////////////////////////////////////////////////////")
+    finalStr += typologyLines(lines)
+    finalStr += "///////////////////////////////////////////////////////////\n"
+
+    //demontre le resultat en Html
+    document.getElementById("info").innerText = finalStr
 
 }
 
@@ -318,7 +346,3 @@ Et je te garde entre mes femmes
 Du regret non sans quelque espoir
 De quand peut-être nous aimâmes
 Et de sans doute nous ravoir.`;
-
-main(poem)
-main(poem2)
-main(poem3)
