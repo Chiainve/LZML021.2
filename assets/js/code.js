@@ -6,6 +6,10 @@ window.onload = function() {
     let segmButton = document.getElementById('segmButton');
     //get the display of the analysis
     let pageAnalysis = document.getElementById('page-analysis');
+    // Get the pole input
+    let poleInput = document.getElementById('poleID');
+    // Get the length input
+    let lengthInput = document.getElementById('lgID');
 
 
     // On "écoute" si le fichier donné a été modifié.
@@ -81,6 +85,70 @@ window.onload = function() {
 
 
     });
+
+    coOccur.addEventListener('click', function() {
+        // Get the string from pole
+        poleValue = poleInput.value.trim();
+        // Get the string from length
+        lengthValue = lengthInput.value.trim();
+        // Get the string from the file display area
+        text = fileDisplayArea.innerText;
+
+        if(poleValue === ''){
+            alert('Entrez une valeur dans le champ "Pole" :)');
+        }else if(lengthValue === ''){
+            alert('Entrez une valeur dans le champ "Longueur" :)');
+        }else if(text === ''){
+            alert('Choisissez un fichier :)');
+        }else{
+            // Get the delimiters and convert to string of characters
+            delimiters = delimID.value.split('');
+            // convert text into list of word
+            listWords = tokenization(text, delimiters);
+
+            if(!listWords.includes(poleValue)){
+                alert("Le mot n'est pas dans le texte :(");
+            }else{
+                //get the dictionary
+                dict = coOccurrence(listWords, poleValue, parseInt(lengthValue));
+
+                // Create a table element
+                let table = document.createElement('table');
+                // Collapse borders
+                table.style.borderCollapse = 'collapse'; 
+
+                // Add the header row with titles T1, T2, and T3
+                let headerRow = table.insertRow();
+                addHeaderCell(headerRow, 'Cooccurrent(s)');
+                addHeaderCell(headerRow, `Co-fréquence`);
+                addHeaderCell(headerRow, 'Fréquence gauche');
+                addHeaderCell(headerRow, '% Fréquence gauche');
+                addHeaderCell(headerRow, 'Fréquence droite');
+                addHeaderCell(headerRow, '% Fréquence droite');
+
+                for (let key in dict){
+                    val = dict[key];
+                    let row = table.insertRow();
+                    addCell(row, `${key}`);
+                    addCell(row, `${val[0]}`);
+                    addCell(row, `${val[1]}`);
+                    addCell(row, `${val[1] / val[0] * 100}`);
+                    addCell(row, `${val[2]}`);
+                    addCell(row, `${val[2] / val[0] * 100}`);
+
+                }
+
+                // Clear previous content
+                pageAnalysis.innerHTML = "";
+                // Append the table to the pageAnalysis div
+                pageAnalysis.appendChild(table);
+            }
+        }
+
+    });
+
+
+
 }
 
 // Function to add a header cell to the table
@@ -109,14 +177,14 @@ function printWords(wordsSet){
 }
 
 //separate the string of the file into a list of words given the characters
-function splitStringWithDelimiters(str, delimiters) {
+function tokenization(str, delimiters) {
     const words = [];
     let currentWord = '';
 
     for (let i = 0; i < str.length; i++) {
         const char = str[i];
         
-        if (delimiters.includes(char)) {
+        if (delimiters.includes(char) || char === '\n') {
             if (currentWord !== '') {
                 words.push(currentWord);
                 currentWord = '';
@@ -137,7 +205,7 @@ function splitStringWithDelimiters(str, delimiters) {
 
 function segmentation(text, delimiters){
     // convert text into list of word
-    listWords = splitStringWithDelimiters(text, delimiters);
+    listWords = tokenization(text, delimiters);
 
     //total number of words
     numberWords = listWords.length;
@@ -165,5 +233,51 @@ function segmentation(text, delimiters){
 }
 
 
+function coOccurrence(listWords, word, lengthVal){
 
+    //find index 
+    index = listWords.indexOf(word);
+
+    //find the elements on the right and on the left
+    //if the interval is outside the list, then take 0 or the length of the list
+    left = listWords.slice( Math.max(0, index - lengthVal),  index);
+    right = listWords.slice(index + 1, Math.min(listWords.length , index + lengthVal + 1));
+
+    //create a dictionary to store the statistics for each co-ocurrence
+    //key = co-occurrence value = [cofreq, freqLeft, freqRight]
+    dict = {};
+
+    //populate dictionary with elements on the left
+    for (let i = 0; i < left.length; i++) {
+        occurrence = left[i];
+        if(occurrence in dict){
+            //update the value
+            list = dict[occurrence];
+            list[0] = list[0] + 1;
+            list[1] = list[1] + 1;
+            dict[occurrence] = list;
+        }else{
+            //create the value
+            dict[occurrence] = [1, 1, 0];
+        }
+    }
+
+    //populate dictionary with elements on the right
+    for (let i = 0; i < right.length; i++) {
+        occurrence = right[i];
+        if(occurrence in dict){
+            //update the value
+            list = dict[occurrence];
+            list[0] = list[0] + 1;
+            list[2] = list[2] + 1;
+            dict[occurrence] = list;
+        }else{
+            //create the value
+            dict[occurrence] = [1, 0, 1];
+        }
+    }
+
+    //return the dictionary
+    return dict;
+}
 
