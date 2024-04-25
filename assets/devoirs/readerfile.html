@@ -5,8 +5,23 @@
     <meta charset="utf-8">
     <link rel="shortcut icon" href="http://www.tal.univ-paris3.fr/plurital/logo.ico">
     <title>Lecture des données dans un fichier...</title>
+
+    <!-- pour utiliser chartist, il faut télécharger les fichiers chartist.min.js et chartist.min.css -->
+	<!-- puis ajouter ces imports dans le HTML -->
+	<script type="text/javascript" src="../js/chartist.min.js"></script> 
+	<link rel="stylesheet" href="../css/chartist.min.css">
+
+
     <script type="text/javascript" language="javascript" src="../js/code.js"></script>
     <link rel="stylesheet" href="../css/monstyle.css" />
+
+
+    <style>
+        #hiddenParagraph {
+          display: none; /* Hide the paragraph by default */
+        }
+    </style>
+
 </head>
 
 <body>
@@ -43,17 +58,22 @@
                     </small>
                     <br />
                     <br />
-                    <button onclick="alert('bonjour');"><span>Bonjour</span></button>
+                    <button onclick="alert('bonjour');"><span>Merci beaucoup pour le cours :)</span></button>
                     <br />
                     <br />
                     <button id="segmButton" class="submit"><span>Segmentation</span></button>
                     <button id="coOccur" class="submit" ><span>Co-occurrences/frequency</span></button>
-                    <button class="submit" onclick="alert('Je ne fais rien, changez-moi !')"><span>action 2</span></button>
-                    <button class="submit" onclick="alert('Je ne fais rien, changez-moi !')"><span>action 3</span></button>
-                    <button class="submit" onclick="alert('Je ne fais rien, changez-moi !')"><span>action 4</span></button>
-                    <button class="submit" onclick="alert('Je ne fais rien, changez-moi !')"><span>action 5</span></button>
-                    <button class="submit" onclick="alert('Je ne fais rien, changez-moi !')"><span>action 6</span></button>
+                    <button id="visButton" class="submit"><span>Visualisation Cooccurrents</span></button>
+                    <button id="aide" class="submit"><span>Afficher l'aide</span></button>
                 </p>
+                <div id="hiddenParagraph">
+                <p>Les fonctionnalités de la page sont :</p>
+                <ol>
+                    <li>Analysez les mots du fichier txt en utilisant le bouton de segmentation</li>
+                    <li>Choisissez un mot pivot et la taille de l'intervalle pour analyser les co-occurrences avec le bouton Co-occurrences/frequency</li>
+                    <li>Visualisez les co-occurrences dans un graphique à barres avec le bouton Visualisation Cooccurrents</li>
+                </ol>
+                </div>
             </div>
             <div id="logger" style="width:100%"></div>
             <br />
@@ -61,6 +81,8 @@
                 <div id="fileDisplayArea"></div>
                 <div id="page-analysis"></div>
             </div>
+            <!-- pour que les graphiques s'affichent, il faut ajouter la class ct-chart à la div où les résultats sont affichés -->
+		    <div id="page-analysis2" class="ct-chart"></div>
         </div>
     </div>
 </body>

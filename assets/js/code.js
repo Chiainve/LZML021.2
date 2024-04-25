@@ -2,8 +2,13 @@
 window.onload = function() {
     let fileInput = document.getElementById('fileInput');
     let fileDisplayArea = document.getElementById('fileDisplayArea');
-    //get the button identifier
+    //get the seg button identifier
     let segmButton = document.getElementById('segmButton');
+    //get the button identifier
+    let visButton = document.getElementById('visButton');
+    //get the button identifier
+    let aideButton = document.getElementById('aide');
+    var hiddenParagraph = document.getElementById("hiddenParagraph");
     //get the display of the analysis
     let pageAnalysis = document.getElementById('page-analysis');
     // Get the pole input
@@ -51,37 +56,42 @@ window.onload = function() {
         // Get the delimiters and convert to string of characters
         delimiters= delimID.value.split('');
         //get the results of the segmentation function
-        segRes = segmentation(text, delimiters);
-        //display the number of words
-        pageAnalysis.innerText = `Le nombre total du texte est: ${segRes[0]}`;
+        if(text === ''){
+            alert('Choisissez un fichier :)');
+        }else{
+            segRes = segmentation(text, delimiters);
+            //display the number of words
+            pageAnalysis.innerText = `Le nombre total du texte est: ${segRes[0]}`;
 
-         // Create a table element
-         let table = document.createElement('table');
-         // Collapse borders
-         table.style.borderCollapse = 'collapse'; 
+            // Create a table element
+            let table = document.createElement('table');
+            // Collapse borders
+            table.style.borderCollapse = 'collapse'; 
 
-        // Add the header row with titles T1, T2, and T3
-        let headerRow = table.insertRow();
-        addHeaderCell(headerRow, 'Nombre de caractères');
-        addHeaderCell(headerRow, `Nombre d'occurences`);
-        addHeaderCell(headerRow, 'Forme(s) unique(s)');
+            // Add the header row with titles T1, T2, and T3
+            let headerRow = table.insertRow();
+            addHeaderCell(headerRow, 'Nombre de caractères');
+            addHeaderCell(headerRow, `Nombre d'occurences`);
+            addHeaderCell(headerRow, 'Forme(s) unique(s)');
 
-        // Convert the dictionary into an array of key-value pairs
-        let keyValueArray = Object.entries(segRes[1]);
+            // Convert the dictionary into an array of key-value pairs
+            let keyValueArray = Object.entries(segRes[1]);
 
-        // Sort the array based on the numeric keys
-        keyValueArray.sort((a, b) => a[0] - b[0]);
-        // Iterate over the sorted array
-        for (let [key, value] of keyValueArray) {
-            
-            let row = table.insertRow();
-            addCell(row, `${key}`);
-            addCell(row, `${value[0]}`);
-            addCell(row, `${printWords(value[1])}`);
+            // Sort the array based on the numeric keys
+            keyValueArray.sort((a, b) => a[0] - b[0]);
+            // Iterate over the sorted array
+            for (let [key, value] of keyValueArray) {
+                
+                let row = table.insertRow();
+                addCell(row, `${key}`);
+                addCell(row, `${value[0]}`);
+                addCell(row, `${printWords(value[1])}`);
+            }
+
+            // Append the table to the pageAnalysis div
+            pageAnalysis.appendChild(table);
         }
-
-        // Append the table to the pageAnalysis div
-        pageAnalysis.appendChild(table);
+        
 
 
     });
@@ -147,9 +157,79 @@ window.onload = function() {
 
     });
 
+    visButton.addEventListener('click', function() {
+        // Get the string from pole
+        poleValue = poleInput.value.trim();
+        // Get the string from length
+        lengthValue = lengthInput.value.trim();
+        // Get the string from the file display area
+        text = fileDisplayArea.innerText;
 
+        if(poleValue === ''){
+            alert('Entrez une valeur dans le champ "Pole" :)');
+        }else if(lengthValue === ''){
+            alert('Entrez une valeur dans le champ "Longueur" :)');
+        }else if(text === ''){
+            alert('Choisissez un fichier :)');
+        }else{
+            // Get the delimiters and convert to string of characters
+            delimiters = delimID.value.split('');
+            // convert text into list of word
+            listWords = tokenization(text, delimiters);
+
+            if(!listWords.includes(poleValue)){
+                alert("Le mot n'est pas dans le texte :(");
+            }else{
+                //get the dictionary
+                dict = coOccurrence(listWords, poleValue, parseInt(lengthValue));
+                //get the labels of the bar chart
+                yAxis = Object.keys(dict);
+
+                //create the values of the series
+                cofreq = []; 
+                freqLeft = []; 
+                freqRight = [];
+                for(let i = 0; i < yAxis.length; i++){
+                    val = dict[yAxis[i]];
+                    cofreq.push(val[0]);
+                    freqLeft.push(val[1]);
+                    freqRight.push(val[2]);
+                }
+                xAxis = [cofreq, freqLeft, freqRight];
+
+                console.log(xAxis);
+
+                let data = {
+                    labels: yAxis,
+                    series: xAxis 
+                };
+            
+                let options = {
+                    width: 700,
+                    height: yAxis.length * 100,
+                    horizontalBars: true
+                };
+
+                document.getElementById('page-analysis2').innerHTML = '';
+                new Chartist.Bar("#page-analysis2", data, options);
+            }
+        }
+    });
+
+    aide.addEventListener('click', function() {
+        // Toggle button text
+        if (aideButton.innerHTML === "Cacher l'aide") {
+            aideButton.innerHTML = "Afficher l'aide";
+            hiddenParagraph.style.display = "none";
+        } else {
+            aideButton.innerHTML = "Cacher l'aide";
+            hiddenParagraph.style.display = "block";
+        }
+
+    });
 
 }
+
 
 // Function to add a header cell to the table
 function addHeaderCell(row, text) {
@@ -280,4 +360,9 @@ function coOccurrence(listWords, word, lengthVal){
     //return the dictionary
     return dict;
 }
+
+
+
+
+
 
